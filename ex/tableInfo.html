@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>tableInfo</title>
+	<link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.css" rel="stylesheet">
+	<style>
+		table thead tr th{
+			text-align: center;
+		}
+		td a{
+			margin-left:10px;
+		}
+	</style>
+</head>
+<body>
+	<div id="table" style="padding:20px;">
+		<div class="panel panel-primary">
+			<div class="panel-heading">用户管理</div>
+			<table class="table table-bordered table-striped text-center">
+				<thead>
+					<tr>
+						<th>姓名</th>
+						<th>年龄</th>
+						<th>性别</th>
+						<th>联系方式</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<template v-for="row in rows">
+						<tr><td>{{row.name}}</td><td>{{row.age}}</td><td>{{row.sex}}</td><td>{{row.tel}}</td><td><a href="#" @click="Edit(row)">编辑</a><a href="#" @click="Delete(row.id)">删除</a></td></tr>
+					</template>
+					<tr>
+						<td><input type="text" class="form-control" v-model="rowtemplate.name"></td>
+						<td><input type="text" class="form-control" v-model="rowtemplate.age"></td>
+						<td><input type="text" class="form-control" v-model="rowtemplate.sex"></td>
+						<td><input type="text" class="form-control" v-model="rowtemplate.tel"></td>
+						<td><button type="button" class="btn btn-primary" v-on:click="Save">保存</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.12/vue.js"></script>
+<script>
+	var data = {
+		rows:[
+			{id:1,name:'张三',age:18,sex:'男',tel:'110'},
+			{id:2,name:'李四',age:20,sex:'男',tel:'111'},
+			{id:3,name:'王五',age:18,sex:'女',tel:'112'},
+			{id:4,name:'赵柳',age:15,sex:'女',tel:'113'},
+			{id:5,name:'孙晓',age:22,sex:'女',tel:'114'}
+		],
+		rowtemplate:{id:0,name:'',age:'',sex:'',tel:''}
+	}
+	var info = new Vue({
+		el:'#table',
+		data:data,
+		methods:{
+			Save:function(){
+				if(this.rowtemplate.id == 0){
+					this.rowtemplate.id = this.rows.length + 1;
+					this.rows.push(this.rowtemplate);
+				}
+				this.rowtemplate = {id:0,name:'',age:'',sex:'',tel:''};
+			},
+			Delete:function(id){
+				for(var i=0;i<this.rows.length;i++){
+					if(this.rows[i].id == id){
+						this.rows.splice(i,1);
+						break;
+					}
+				}
+			},
+			Edit:function(row){
+				this.rowtemplate = row;
+			}
+		}
+	})
+</script>
+</html>

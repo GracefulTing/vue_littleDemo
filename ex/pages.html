@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>pages</title>
+	<link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.css" rel="stylesheet">
+	<style>
+		table thead tr th{
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div id="table" style="padding:20px;">
+		<div class="panel panel-primary">
+			<div class="panel-heading">用户管理</div>
+			<table class="table table-bordered table-striped text-center">
+				<thead>
+					<tr>
+						<th>姓名</th>
+						<th>年龄</th>
+						<th>性别</th>
+						<th>联系方式</th>
+					</tr>
+				</thead>
+				<tbody>
+					<template v-for="(row,index) in rows">
+						<tr v-if="index >= (curpage - 1) * pagesize && index < curpage * pagesize ">
+							<td>{{row.name}}</td>
+							<td>{{row.age}}</td>
+							<td>{{row.sex}}</td>
+							<td>{{row.tel}}</td>
+						</tr>
+					</template>
+				</tbody>
+			</table>
+		</div>
+		<nav style="float:right">
+			<ul class="pagination pagination-lg">
+				<template v-for="page in Math.ceil(rows.length/pagesize)">
+					<li v-on:click="prepage()" id="prepage" v-if="page==1" class="disabled"><a href="#">上一页</a></li>
+					<li v-if="page==1" class="active" v-on:click="numpage(page,$event)"><a href="#">{{page}}</a></li>
+					<li v-else v-on:click="numpage(page,$event)"><a href="#">{{page}}</a></li>
+					<li id="nextpage" v-on:click="nextpage()" v-if="page==Math.ceil(rows.length/pagesize)"><a href="#">下一页</a></li>
+				</template>
+			</ul>
+		</nav>
+	</div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.12/vue.js"></script>
+<script>
+	var data = {
+		rows:[
+			{name:'张三',age:18,sex:'男',tel:'110'},
+			{name:'李四',age:20,sex:'男',tel:'111'},
+			{name:'王五',age:18,sex:'女',tel:'112'},
+			{name:'赵柳',age:15,sex:'女',tel:'113'},
+			{name:'孙晓',age:22,sex:'女',tel:'114'},
+			{name:'李四',age:20,sex:'男',tel:'111'},
+			{name:'王五',age:18,sex:'女',tel:'112'},
+			{name:'赵柳',age:15,sex:'女',tel:'113'},
+			{name:'孙晓',age:22,sex:'女',tel:'114'},
+			{name:'王五',age:18,sex:'女',tel:'112'},
+			{name:'赵柳',age:15,sex:'女',tel:'113'},
+			{name:'孙晓',age:22,sex:'女',tel:'114'},
+			{name:'李四',age:20,sex:'男',tel:'111'},
+			{name:'王五',age:18,sex:'女',tel:'112'},
+		],
+		pagesize:5,
+		curpage:1
+	}
+	var vue = new Vue({
+		el:'#table',
+		data:data,
+		methods:{
+			prepage:function(event){
+				$(".pagination .active").prev().trigger("click");
+			},
+			nextpage:function(event){
+				$(".pagination .active").next().trigger("click");
+			},
+			numpage:function(num,event){
+				if(this.curpage == num){
+					return ;
+				}
+				this.curpage = num;
+				$(".pagination li").removeClass("active");
+				if(event.target.tagName.toUpperCase() == 'LI'){
+					$(event.target).addClass("active");
+				}else{
+					$(event.target).parent().addClass("active");
+				}
+
+				if(this.curpage == 1){
+					$("#prepage").addClass("disabled");
+				}else{
+					$("#prepage").removeClass("disabled");
+				}
+
+				if(this.curpage == Math.ceil(this.rows.length/this.pagesize)){
+					$("#nextpage").addClass("disabled");
+				}else{
+					$("#nextpage").removeClass("disabled");
+				}
+			}
+		}
+	})
+</script>
+</html>
